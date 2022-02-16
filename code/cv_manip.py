@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 
 coordinates = []
-
 staff = cv2.imread('staff.png', 1)
 staff2 = cv2.imread('staff.png', 1)
 picWidth = staff.shape[1]
@@ -41,6 +40,7 @@ def coord_click():
 
 def buffer_generator(T, image):
     white_val = [0, 255, 0]
+    [[x, j], [a, b]] = coordinates
     # loop over the image, pixel by pixel
     for y in range(image.shape[0]):
         for x in range(image.shape[1]):
@@ -55,7 +55,7 @@ def buffer_generator(T, image):
 
     for y in reversed(range(image.shape[0])):
         for x in reversed(range(image.shape[1])):
-            bottom_test_val = image[y,x]
+            bottom_test_val = image[y, x]
             # threshold the pixel
             if bottom_test_val[1] == white_val[1]:
                 buff_bot = y + T
@@ -64,24 +64,29 @@ def buffer_generator(T, image):
             continue
         break
 
-    return buff_top, buff_bot
+    final_y = buff_top + j  # top buffer coord
+    final_y_bot = buff_bot + j# bottom buffer coord
 
-
+    return final_y, final_y_bot
 
 
 # box iterates over staff line by half-width until end of frame
 def iterate_box(image):
     [[x, y], [a, b]] = coordinates
     while a < picWidth:
+
         x = int(x + width / 2)
         a = int(a + width / 2)
         print(x, y, a, b)
         next_box = image[y:b, x:a]
-        buffer_generator(15, next_box)
-        cv2.imshow('next', next_box)
+        top_y, bot_y = buffer_generator(10, next_box)
+        buffed_box = image[top_y:bot_y, x:a]
+        print('top', top_y, 'bot', bot_y)
+        cv2.imshow('next', buffed_box)
         cv2.waitKey(0)
 
-        return next_box
+    return buffed_box
+
 
 coord_click()
 
