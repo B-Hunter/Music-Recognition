@@ -2,8 +2,14 @@ import numpy as np
 import cv2
 
 coordinates = []
-staff = cv2.imread('staff.png', 1)
-staff2 = cv2.imread('staff.png', 1)
+coordinate_list = []
+one = cv2.imread('GT_3795.png', 1)
+two = cv2.imread('BW_3795.png', 1)
+staff = cv2.subtract(two, one)
+staff2 = cv2.subtract(two, one)
+# staff = cv2.imread('staff.png', 1)
+# staff2 = cv2.imread('staff.png', 1)
+
 picWidth = staff.shape[1]
 picHeight = staff.shape[0]
 
@@ -12,7 +18,7 @@ T = 10
 
 def coord_click():
     # function to display the coordinates of
-    #    of the points clicked on the image
+    #  the points clicked on the image
 
     def click_event(event, x, y, flags, params):
         # checking for left mouse clicks
@@ -91,16 +97,28 @@ def iterate_box(image):
             print('top', top_y, 'bot', bot_y)
             cv2.imshow('next', buffed_box)
             cv2.waitKey(0)
-        # return buffed_box
-        # iterate until next staff
+            # return buffed_box
+            # iterate until next staff
+            # TODO: ADD something like this
+            i = 0
+            coord_set = [x, y, a, b]
+            coordinate_list.append(coord_set)
+            i = i + 1
 
         next_under = image[b:(b + (b - y)), w:z]
         cv2.imshow('maybe', next_under)
         cv2.waitKey(0)
-
+        # new coordinates for next staff line
         [[x, y], [a, b]] = [[w, b], [z, (b + (b - y))]]
 
+    return coordinate_list
 
+
+# creates the txt documents
+def coord_list_gen(coord_list):
+    coord_list.insert(0, ['x', 'y', 'a', 'b'])
+    with open('coordinateList.txt', 'w') as file:
+        file.write('\n'.join(str(coords) for coords in coordinated))
 
 
 # Calls click function and prints coordinate points in console
@@ -123,7 +141,8 @@ cv2.destroyAllWindows()
 
 # Calls iterate_box function
 print(picWidth)
-iterate_box(staff2)
+coordinated = iterate_box(staff2)
+coord_list_gen(coordinated)
 # cv2.imshow('snippet', box)
 # cv2.waitKey(0)
 
