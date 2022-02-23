@@ -5,6 +5,8 @@ coordinates = []
 staff = cv2.imread('staff.png', 1)
 staff2 = cv2.imread('staff.png', 1)
 picWidth = staff.shape[1]
+picHeight = staff.shape[0]
+
 T = 10
 
 
@@ -36,10 +38,14 @@ def coord_click():
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+
 # Creates buffer of snippet for every iteration over staff
-def buffer_generator(T, image):
+def buffer_generator(T, image, y):
+    buff_top = 0
+    buff_bot = 0
     white_val = [0, 255, 0]
-    [[x, j], [a, b]] = coordinates
+    j = y
+    # [[x, j], [a, b]] = coordinates
     # loop over the image, pixel by pixel
     for y in range(image.shape[0]):
         for x in range(image.shape[1]):
@@ -72,18 +78,29 @@ def buffer_generator(T, image):
 # box iterates over staff line by half-width until end of frame
 def iterate_box(image):
     [[x, y], [a, b]] = coordinates
-    while a < picWidth:
-        x = int(x + width / 2)
-        a = int(a + width / 2)
-        print(x, y, a, b)
-        next_box = image[y:b, x:a]
-        top_y, bot_y = buffer_generator(10, next_box)
-        buffed_box = image[top_y:bot_y, x:a]
-        print('top', top_y, 'bot', bot_y)
-        cv2.imshow('next', buffed_box)
+    w = x
+    z = a
+    while b < picHeight:
+        while a < picWidth:
+            x = int(x + width / 2)
+            a = int(a + width / 2)
+            print(x, y, a, b)
+            next_box = image[y:b, x:a]
+            top_y, bot_y = buffer_generator(10, next_box, y)
+            buffed_box = image[top_y:bot_y, x:a]
+            print('top', top_y, 'bot', bot_y)
+            cv2.imshow('next', buffed_box)
+            cv2.waitKey(0)
+        # return buffed_box
+        # iterate until next staff
+
+        next_under = image[b:(b + (b - y)), w:z]
+        cv2.imshow('maybe', next_under)
         cv2.waitKey(0)
 
-    return buffed_box
+        [[x, y], [a, b]] = [[w, b], [z, (b + (b - y))]]
+
+
 
 
 # Calls click function and prints coordinate points in console
@@ -104,7 +121,7 @@ height = snip.shape[0]
 width = snip.shape[1]
 cv2.destroyAllWindows()
 
-# Calls iterate_box function of given image
+# Calls iterate_box function
 print(picWidth)
 iterate_box(staff2)
 # cv2.imshow('snippet', box)
