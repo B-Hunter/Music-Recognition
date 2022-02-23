@@ -33,11 +33,10 @@ def coord_click():
         # setting mouse handler for the image
         # and calling the click_event() function
         cv2.setMouseCallback('Staff', click_event)
-
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-
+# Creates buffer of snippet for every iteration over staff
 def buffer_generator(T, image):
     white_val = [0, 255, 0]
     [[x, j], [a, b]] = coordinates
@@ -65,7 +64,7 @@ def buffer_generator(T, image):
         break
 
     final_y = buff_top + j  # top buffer coord
-    final_y_bot = buff_bot + j# bottom buffer coord
+    final_y_bot = buff_bot + j  # bottom buffer coord
 
     return final_y, final_y_bot
 
@@ -74,7 +73,6 @@ def buffer_generator(T, image):
 def iterate_box(image):
     [[x, y], [a, b]] = coordinates
     while a < picWidth:
-
         x = int(x + width / 2)
         a = int(a + width / 2)
         print(x, y, a, b)
@@ -88,21 +86,25 @@ def iterate_box(image):
     return buffed_box
 
 
+# Calls click function and prints coordinate points in console
 coord_click()
-
 print('Coordinates: ', coordinates)
 
+# Shows the rectangle made by the coordinates,
 cv2.rectangle(staff, coordinates[0], coordinates[1], (0, 255, 0), 2)
-
 cv2.imshow('Rectangle', staff)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+# Shows the cropped rectangle and stores height/width
 snip = staff[coordinates[0][1]:coordinates[1][1], coordinates[0][0]:coordinates[1][0]]
 cv2.imshow('snippet', snip)
 cv2.waitKey(0)
 height = snip.shape[0]
 width = snip.shape[1]
 cv2.destroyAllWindows()
+
+# Calls iterate_box function of given image
 print(picWidth)
 iterate_box(staff2)
 # cv2.imshow('snippet', box)
