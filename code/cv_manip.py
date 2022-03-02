@@ -1,10 +1,11 @@
 import numpy as np
 import cv2
 
-FILENAME = '3594'
+FILENAME = '0891'
 
 coordinates = []
 coordinate_list = []
+
 one = cv2.imread('GT_' + FILENAME + '.png')
 two = cv2.imread('BW_' + FILENAME + '.png')
 staff = cv2.subtract(two, one)
@@ -26,10 +27,10 @@ def coord_click():
             # displaying the coordinates
             # on the Shell
             print(x, ' ', y)
-           # font = cv2.FONT_HERSHEY_SIMPLEX
-           # cv2.putText(staff, str(x) + ',' +
-                      #  str(y), (x, y), font,
-                     #   1, (255, 0, 0), 2)
+            # font = cv2.FONT_HERSHEY_SIMPLEX
+            # cv2.putText(staff, str(x) + ',' +
+            #  str(y), (x, y), font,
+            #   1, (255, 0, 0), 2)
 
             cv2.imshow('Staff', staff)
 
@@ -101,8 +102,12 @@ def iterate_box(image):
             # iterate until next staff
 
             i = 0
-            coord_set = [x, top_y, a, bot_y]
+            h = ((a - x) / 2) + x
+            coord_set = [x, top_y, h, bot_y]
             coordinate_list.append(coord_set)
+            coord_set = [h, top_y, a, bot_y]
+            coordinate_list.append(coord_set)
+
             i = i + 1
 
         next_under = image[b:(b + (b - y)), w:z]
@@ -117,7 +122,7 @@ def iterate_box(image):
 # creates the txt documents
 def coord_list_gen(coord_list):
     coord_list.insert(0, ['x', 'y', 'a', 'b'])
-    with open(FILENAME + '_x.txt', 'w') as file:
+    with open(FILENAME + '_xh.txt', 'w') as file:
         file.write('\n'.join(str(coords) for coords in coordinated))
 
 
@@ -126,10 +131,10 @@ coord_click()
 print('Coordinates: ', coordinates)
 
 # Shows the rectangle made by the coordinates,
-#cv2.rectangle(staff2, coordinates[0], coordinates[1], (0, 255, 0), 2)
-#cv2.imshow('Rectangle', staff)
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+# cv2.rectangle(staff2, coordinates[0], coordinates[1], (0, 255, 0), 2)
+# cv2.imshow('Rectangle', staff)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
 # Shows the cropped rectangle and stores height/width
 snip = staff2[coordinates[0][1]:coordinates[1][1], coordinates[0][0]:coordinates[1][0]]
@@ -141,8 +146,9 @@ cv2.destroyAllWindows()
 
 # Calls iterate_box function
 print(picWidth)
-coordinated = iterate_box(staff )
+coordinated = iterate_box(staff)
 coord_list_gen(coordinated)
+
 # cv2.imshow('snippet', box)
 # cv2.waitKey(0)
 
