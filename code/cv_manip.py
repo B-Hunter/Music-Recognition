@@ -1,10 +1,12 @@
 import numpy as np
 import cv2
 
+FILENAME = '3594'
+
 coordinates = []
 coordinate_list = []
-one = cv2.imread('GT_3594.png')
-two = cv2.imread('BW_3594.png')
+one = cv2.imread('GT_' + FILENAME + '.png')
+two = cv2.imread('BW_' + FILENAME + '.png')
 staff = cv2.subtract(two, one)
 staff2 = cv2.subtract(two, one)
 
@@ -115,7 +117,7 @@ def iterate_box(image):
 # creates the txt documents
 def coord_list_gen(coord_list):
     coord_list.insert(0, ['x', 'y', 'a', 'b'])
-    with open('coordinateList05.txt', 'w') as file:
+    with open(FILENAME + '_x.txt', 'w') as file:
         file.write('\n'.join(str(coords) for coords in coordinated))
 
 
@@ -124,7 +126,7 @@ coord_click()
 print('Coordinates: ', coordinates)
 
 # Shows the rectangle made by the coordinates,
-cv2.rectangle(staff2, coordinates[0], coordinates[1], (0, 255, 0), 2)
+#cv2.rectangle(staff2, coordinates[0], coordinates[1], (0, 255, 0), 2)
 #cv2.imshow('Rectangle', staff)
 #cv2.waitKey(0)
 #cv2.destroyAllWindows()
