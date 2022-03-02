@@ -3,12 +3,10 @@ import cv2
 
 coordinates = []
 coordinate_list = []
-one = cv2.imread('GT_3795.png', 1)
-two = cv2.imread('BW_3795.png', 1)
+one = cv2.imread('GT_3594.png')
+two = cv2.imread('BW_3594.png')
 staff = cv2.subtract(two, one)
 staff2 = cv2.subtract(two, one)
-# staff = cv2.imread('staff.png', 1)
-# staff2 = cv2.imread('staff.png', 1)
 
 picWidth = staff.shape[1]
 picHeight = staff.shape[0]
@@ -26,10 +24,10 @@ def coord_click():
             # displaying the coordinates
             # on the Shell
             print(x, ' ', y)
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(staff, str(x) + ',' +
-                        str(y), (x, y), font,
-                        1, (255, 0, 0), 2)
+           # font = cv2.FONT_HERSHEY_SIMPLEX
+           # cv2.putText(staff, str(x) + ',' +
+                      #  str(y), (x, y), font,
+                     #   1, (255, 0, 0), 2)
 
             cv2.imshow('Staff', staff)
 
@@ -92,14 +90,14 @@ def iterate_box(image):
             a = int(a + width / 2)
             print(x, y, a, b)
             next_box = image[y:b, x:a]
-            top_y, bot_y = buffer_generator(10, next_box, y)
+            top_y, bot_y = buffer_generator(17            , next_box, y)
             buffed_box = image[top_y:bot_y, x:a]
             print('top', top_y, 'bot', bot_y)
             cv2.imshow('next', buffed_box)
             cv2.waitKey(0)
             # return buffed_box
             # iterate until next staff
-            # TODO: ADD something like this
+
             i = 0
             coord_set = [x, y, a, b]
             coordinate_list.append(coord_set)
@@ -117,7 +115,7 @@ def iterate_box(image):
 # creates the txt documents
 def coord_list_gen(coord_list):
     coord_list.insert(0, ['x', 'y', 'a', 'b'])
-    with open('coordinateList.txt', 'w') as file:
+    with open('coordinateList05.txt', 'w') as file:
         file.write('\n'.join(str(coords) for coords in coordinated))
 
 
@@ -126,13 +124,13 @@ coord_click()
 print('Coordinates: ', coordinates)
 
 # Shows the rectangle made by the coordinates,
-cv2.rectangle(staff, coordinates[0], coordinates[1], (0, 255, 0), 2)
-cv2.imshow('Rectangle', staff)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.rectangle(staff2, coordinates[0], coordinates[1], (0, 255, 0), 2)
+#cv2.imshow('Rectangle', staff)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
 
 # Shows the cropped rectangle and stores height/width
-snip = staff[coordinates[0][1]:coordinates[1][1], coordinates[0][0]:coordinates[1][0]]
+snip = staff2[coordinates[0][1]:coordinates[1][1], coordinates[0][0]:coordinates[1][0]]
 cv2.imshow('snippet', snip)
 cv2.waitKey(0)
 height = snip.shape[0]
@@ -141,7 +139,7 @@ cv2.destroyAllWindows()
 
 # Calls iterate_box function
 print(picWidth)
-coordinated = iterate_box(staff2)
+coordinated = iterate_box(staff )
 coord_list_gen(coordinated)
 # cv2.imshow('snippet', box)
 # cv2.waitKey(0)
