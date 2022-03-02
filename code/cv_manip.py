@@ -90,18 +90,18 @@ def iterate_box(image):
         while a < picWidth:
             x = int(x + width / 2)
             a = int(a + width / 2)
-            print(x, y, a, b)
+
             next_box = image[y:b, x:a]
-            top_y, bot_y = buffer_generator(17            , next_box, y)
+            top_y, bot_y = buffer_generator(17, next_box, y)
             buffed_box = image[top_y:bot_y, x:a]
-            print('top', top_y, 'bot', bot_y)
+            print(x, top_y, a, bot_y)
             cv2.imshow('next', buffed_box)
             cv2.waitKey(0)
             # return buffed_box
             # iterate until next staff
 
             i = 0
-            coord_set = [x, y, a, b]
+            coord_set = [x, top_y, a, bot_y]
             coordinate_list.append(coord_set)
             i = i + 1
 
