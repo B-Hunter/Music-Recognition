@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import shutil
 # KNOWN ERRORS AND HOW TO FIX
 '''
  ERROR: cv2.error: OpenCV(4.5.5) /Users/xperience/actions-runner/_work/opencv-python/opencv-python/opencv/modules/highgui/src/window.cpp:1000: error: (-215:Assertion failed) size.width>0 && size.height>0 in function 'imshow'
@@ -26,6 +27,7 @@ TYPE = 'Base'
 global x1_start
 coordinates = []
 coordinate_list = []
+xywh_list = []
 
 one = cv2.imread('GT_' + FILENAME + '.png')
 two = cv2.imread('BW_' + FILENAME + '.png')
@@ -139,7 +141,9 @@ def iterate_box(image):
             #cv2.imshow('Next Clip', next_box)
             #cv2.waitKey(0)
             coord_set = [x1+int(wid/2), top_y, x2+int(wid/2), bot_y]
+            xy_wh_set = [x1+int(wid/2), top_y,(x2-x1+1),(bot_y - top_y + 1)]
             coordinate_list.append(coord_set)
+            xywh_list.append(xy_wh_set)
             #coord_set = [h, top_y, a, bot_y]
             #coordinate_list.append(coord_set)
             i = i + 1
@@ -154,14 +158,22 @@ def iterate_box(image):
         
         
 
-    return coordinate_list
+    return coordinate_list, xywh_list
 
 
 # creates the txt documents
-def coord_list_gen(coord_list):
-    coord_list.insert(0, ['x', 'y', 'a', 'b'])
+def coord_list_gen(xy1xy2_list, xywh_list):
+    src_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/"
+    xy1xy2_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/xy1xy2/"
+    xywh_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/xywh/"
+    xywh_list.insert(0, ['x1', 'y2','w', 'h'])
+    xy1xy2_list.insert(0, ['x1', 'y1', 'x2', 'y2'])
     with open('BW_' + FILENAME + '.txt', 'w') as file:
-        file.write('\n'.join(str(coords) for coords in coordinated))
+        file.write('\n'.join(str(coords) for coords in xy1xy2_list))
+    shutil.move(src_folder + 'BW_' + FILENAME + '.txt', xy1xy2_folder)
+    with open('BW_' + FILENAME + '.txt', 'w') as file:
+        file.write('\n'.join(str(coords) for coords in xywh_list))
+    shutil.move(src_folder + 'BW_' + FILENAME + '.txt', xywh_folder)
 
 
 # Calls click function and prints coordinate points in console
@@ -177,8 +189,8 @@ cv2.destroyAllWindows()
 
 # Calls iterate_box function
 #print(picWidth)
-coordinated = iterate_box(staff)
-coord_list_gen(coordinated)
+xy1xy2_list, xywh_list = iterate_box(staff)
+coord_list_gen(xy1xy2_list, xywh_list)
 cv2.imshow('Rectangle', three)
 cv2.imshow('Rectangle', four)
 cv2.waitKey(0)
