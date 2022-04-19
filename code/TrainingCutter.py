@@ -1,43 +1,15 @@
 import numpy as np
 import cv2
 import shutil
-# KNOWN ERRORS AND HOW TO FIX
-'''
- ERROR: cv2.error: OpenCV(4.5.5) /Users/xperience/actions-runner/_work/opencv-python/opencv-python/opencv/modules/highgui/src/window.cpp:1000: error: (-215:Assertion failed) size.width>0 && size.height>0 in function 'imshow'
- CAUSE: accidental double click
- FIX: don't double click
+import os
 
- ERROR: UnboundLocalError: local variable 'box_top' referenced before assignment
- CAUSE: creating bounding box in empty space
- FIX: LINE 110 (while x2 < picWidth - x:) - make x value larger
-
- ERROR: UnboundLocalError: local variable 'box_top' referenced before assignment
- CAUSE: creating bounding box in empty space
- FIX: LINE 111 (while x2 < picWidth - 100:) - make 100 value larger
--- same type of error can happen if line 106 (while y2 < picHeight - 300:) allows for empty box to be created when moving vertically
-
-ERROR: AttributeError: 'NoneType' object has no attribute 'shape'
-CAUSE: FILENAME is incorrect
-FIX: update FILENAME
-'''
-
-FILENAME = '0002'
+FILENAME = '3003'
 TYPE = 'Base'
 
 global x1_start
 coordinates = []
 coordinate_list = []
 xywh_list = []
-
-one = cv2.imread('GT_' + FILENAME + '.png')
-two = cv2.imread('BW_' + FILENAME + '.png')
-three = cv2.imread('BW_' + FILENAME + '.png')
-four = cv2.imread('GR_' + FILENAME + '.png')
-staff = cv2.subtract(two, one)
-staff2 = cv2.subtract(two, one)
-
-picWidth = staff.shape[1]
-picHeight = staff.shape[0]
 
 T = 5
 
@@ -156,8 +128,6 @@ def iterate_box(image):
 
         # Shows the rectangle made by the coordinates,
         
-        
-
     return coordinate_list, xywh_list
 
 
@@ -168,13 +138,41 @@ def coord_list_gen(xy1xy2_list, xywh_list):
     xywh_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/xywh/"
     xywh_list.insert(0, ['x1', 'y2','w', 'h'])
     xy1xy2_list.insert(0, ['x1', 'y1', 'x2', 'y2'])
-    with open('BW_' + FILENAME + '.txt', 'w') as file:
+    with open('GR_' + FILENAME + '.txt', 'w') as file:
         file.write('\n'.join(str(coords) for coords in xy1xy2_list))
-    shutil.move(src_folder + 'BW_' + FILENAME + '.txt', xy1xy2_folder)
-    with open('BW_' + FILENAME + '.txt', 'w') as file:
+    shutil.move(src_folder + 'GR_' + FILENAME + '.txt', xy1xy2_folder)
+    with open('GR_' + FILENAME + '.txt', 'w') as file:
         file.write('\n'.join(str(coords) for coords in xywh_list))
-    shutil.move(src_folder + 'BW_' + FILENAME + '.txt', xywh_folder)
+    shutil.move(src_folder + 'GR_' + FILENAME + '.txt', xywh_folder)
 
+def open_music():
+    src_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/"
+    GR_folder = r"Training_GR/"
+    BW_folder = r"Training_BW/"
+    GT_folder = r"Training_GT/"
+
+    shutil.copy(GR_folder + 'GR_' + FILENAME + '.png', src_folder)
+    shutil.copy(BW_folder + 'BW_' + FILENAME + '.png', src_folder)
+    shutil.copy(GT_folder + 'GT_' + FILENAME + '.png', src_folder)
+
+def delete_music():
+    src_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/"
+    os.remove(src_folder + 'GR_' + FILENAME + '.png')
+    os.remove(src_folder + 'BW_' + FILENAME + '.png')
+    os.remove(src_folder + 'GT_' + FILENAME + '.png')
+
+
+open_music()
+
+one = cv2.imread('GT_' + FILENAME + '.png')
+two = cv2.imread('BW_' + FILENAME + '.png')
+three = cv2.imread('BW_' + FILENAME + '.png')
+four = cv2.imread('GR_' + FILENAME + '.png')
+staff = cv2.subtract(two, one)
+staff2 = cv2.subtract(two, one)
+
+picWidth = staff.shape[1]
+picHeight = staff.shape[0]
 
 # Calls click function and prints coordinate points in console
 coord_click()
@@ -188,7 +186,6 @@ width = snip.shape[1]
 cv2.destroyAllWindows()
 
 # Calls iterate_box function
-#print(picWidth)
 xy1xy2_list, xywh_list = iterate_box(staff)
 coord_list_gen(xy1xy2_list, xywh_list)
 cv2.imshow('Rectangle', three)
@@ -197,9 +194,7 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 cv2.imwrite(FILENAME + '_bounded' + '.png', three)
 cv2.imwrite(FILENAME + 'grey_bounded' + '.png', four)
-# cv2.imshow('snippet', box)
-# cv2.waitKey(0)
 
-
+delete_music()
 
 exit()
