@@ -134,8 +134,8 @@ def iterate_box(image):
 # creates the txt documents
 def coord_list_gen(xy1xy2_list, xywh_list):
     src_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/"
-    xy1xy2_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/xy1xy2/"
-    xywh_folder = r"/Users/chandlerbeitia/PycharmProjects/VIP400/MusicRegognition/xywh/"
+    xy1xy2_folder = r"xy1xy2/"
+    xywh_folder = r"xywh/"
     xywh_list.insert(0, ['x1', 'y2','w', 'h'])
     xy1xy2_list.insert(0, ['x1', 'y1', 'x2', 'y2'])
     with open('GR_' + FILENAME + '.txt', 'w') as file:
