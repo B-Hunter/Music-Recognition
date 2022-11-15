@@ -11,7 +11,7 @@ Not sure what I was using this file for...
 from PIL import Image
 import os, os.path
 
-#print(len([name for name in os.listdir(r"C:\Users\Mason\Desktop\2013\Images")]))
+
 def convertToRelative(path):
     
     imagePath = os.path.join(path ,"Images")
@@ -74,4 +74,4 @@ def convertToRelative(path):
                 
         print("end of file")
         
-convertToRelative(r"C:\Users\Mason\Desktop\ml\2013")
+convertToRelative(r"C:\\Users\\Mason\Desktop\\ml\\2013")
