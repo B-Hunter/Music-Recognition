@@ -45,8 +45,6 @@ def convertToRelative(path, dataWidth):
         dataNameR = dataName + dataSuffix
 
         #Extracts data
-        
-        
         dataFilename = os.path.join(path, dataWidth , dataNameR)
         
         with open(dataFilename, 'r') as f:
@@ -65,7 +63,7 @@ def convertToRelative(path, dataWidth):
             for line in lines:
                 lineList = line.strip('[]\n').split(', ')
 
-                    
+                
                 classid = 0
                 #Maths to convert to relative form
                 #convert x1 y1 a b into relative x1 y1 x2 y2

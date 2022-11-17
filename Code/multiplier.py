@@ -69,7 +69,6 @@ def convertToRelative(path):
                 else:
                     w.write("{} {:.3f} {:.3f} {:.3f} {:.3f}".format(classid, xcenter, ycenter, width, height))
                 
-
                 
                 
         print("end of file")
